@@ -6,7 +6,6 @@ import chatroutes from "./routes/chat.js";
 import authroutes from "./routes/auth.js";
 
 const app = express();
-const port = 8080;
 
 app.use(express.json());
 app.use(cors());
@@ -25,40 +24,40 @@ app.use((err, req, res, next) => {
     res.status(err.status || 500).json({ error: err.message || "Internal Server Error" });
 });
 
-app.listen(port, () => {
-    console.log(`Listening on port ${port}`)
-    connectDB();
-});
+// app.listen(port, () => {
+//     console.log(`Listening on port ${port}`)
+//     connectDB();
+// });
 
-const connectDB = async() => {
-    try{
+// const connectDB = async() => {
+//     try{
+//         await mongoose.connect(process.env.MONGO_URI);
+//         console.log("Connected with Database");
+//     }catch(err){
+//         console.log("Failed to connect with Database", err);
+//     }
+// }
+if (process.env.NODE_ENV !== "production") {
+
+    const port = 8080;
+
+    app.listen(port, () => {
+        console.log(`Listening on port ${port}`);
+    });
+
+}
+const connectDB = async () => {
+    try {
+        if (mongoose.connection.readyState === 1) {
+            return;
+        }
         await mongoose.connect(process.env.MONGO_URI);
         console.log("Connected with Database");
-    }catch(err){
+    } catch (err) {
         console.log("Failed to connect with Database", err);
     }
-}
+};
 
-// app.post("/test", async (req, res) =>{
-//     const options = {
-//         method: "POST",
-//         headers: {
-//             "Content-Type": "application/json", 
-//             "Authorization": `Bearer ${process.env.GROQ_API_KEY}`
-//         },
-//         body: JSON.stringify({
-//             "model": "openai/gpt-oss-20b",
-//             "messages": [{
-//                 "role": "user",
-//                 "content": req.body.message
-//             }]
-//         })
-//     };
-//     try{
-//         const response = await fetch("https://api.groq.com/openai/v1/chat/completions", options);
-//         const data = await response.json();
-//         res.send(data.choices[0].message.content);
-//     }catch(err){
-//         console.log(err);
-//     }
-// });
+connectDB();
+
+export default app;
