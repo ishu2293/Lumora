@@ -2,6 +2,8 @@ import { useState, useContext } from "react";
 import { AuthContext } from "./AuthContext.jsx";
 import "./Auth.css";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+
 export default function Auth() {
     const [isLogin, setIsLogin] = useState(true);
     const [username, setUsername] = useState("");
@@ -21,7 +23,7 @@ export default function Auth() {
         const payload = isLogin ? { email, password } : { username, email, password };
 
         try {
-            const res = await fetch(`http://localhost:8080${endpoint}`, {
+            const res = await fetch(`${API_URL}${endpoint}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload)

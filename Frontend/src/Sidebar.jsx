@@ -4,14 +4,17 @@ import { MyContext } from "./Mycontext.jsx";
 import { AuthContext } from "./AuthContext.jsx";
 import { v1 as uuidv1 } from "uuid";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+
 export default function Sidebar(){
     const {allThreads, setAllThreads, currThreadId, setNewchat, setPrompt, setReply, setcurrThreadId, setPrevChats} = useContext(MyContext);
-    const { token } = useContext(AuthContext);
+    const { token: authToken } = useContext(AuthContext);
 
     const getAllThreads = async() => {
+        const token = localStorage.getItem("token") || authToken;
         if (!token) return;
         try{
-            const response = await fetch("http://localhost:8080/api/thread", {
+            const response = await fetch(`${API_URL}/api/thread`, {
                 headers: { "Authorization": `Bearer ${token}` }
             });
             const res = await response.json();
@@ -27,7 +30,7 @@ export default function Sidebar(){
 
     useEffect(() => {
         getAllThreads();
-    }, [currThreadId, token]);
+    }, [currThreadId, authToken]);
 
     const createNewChat = () => {
         setNewchat(true);
@@ -39,8 +42,9 @@ export default function Sidebar(){
 
     const changeThread = async(newThreadId) => {
         setcurrThreadId(newThreadId);
+        const token = localStorage.getItem("token") || authToken;
         try{
-            const response = await fetch(`http://localhost:8080/api/thread/${newThreadId}`, {
+            const response = await fetch(`${API_URL}/api/thread/${newThreadId}`, {
                 headers: { "Authorization": `Bearer ${token}` }
             });
             const res = await response.json();
@@ -55,8 +59,9 @@ export default function Sidebar(){
     };
 
     const deleteThread = async (threadId) => {
+        const token = localStorage.getItem("token") || authToken;
         try {
-            await fetch(`http://localhost:8080/api/thread/${threadId}`, {
+            await fetch(`${API_URL}/api/thread/${threadId}`, {
                 method: "DELETE",
                 headers: { "Authorization": `Bearer ${token}` }
             });

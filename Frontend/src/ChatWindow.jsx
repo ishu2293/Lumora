@@ -5,9 +5,11 @@ import { AuthContext } from "./AuthContext.jsx";
 import { useContext, useState, useEffect } from "react";
 import { ScaleLoader } from "react-spinners";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+
 export default function ChatWindow(){
     const {prompt, setPrompt, reply, setReply, currThreadId, setPrevChats, setNewchat} = useContext(MyContext);
-    const { user, token, logout } = useContext(AuthContext);
+    const { user, token: authToken, logout } = useContext(AuthContext);
 
     const [loading, setLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
@@ -16,6 +18,9 @@ export default function ChatWindow(){
         if(!prompt.trim()) return;
         setLoading(true);
         setNewchat(false);
+
+        const token = localStorage.getItem("token") || authToken;
+
         const options = {
             method: "POST",
             headers: {
@@ -29,7 +34,7 @@ export default function ChatWindow(){
         };
 
         try {
-            const response = await fetch("http://localhost:8080/api/chat", options);
+            const response = await fetch(`${API_URL}/api/chat`, options);
             const res = await response.json();
             if (response.ok) {
                 setReply(res.reply);

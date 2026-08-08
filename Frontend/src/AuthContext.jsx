@@ -2,6 +2,8 @@ import { createContext, useState, useEffect } from "react";
 
 export const AuthContext = createContext(null);
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(() => {
         const savedUser = localStorage.getItem("lumora_user");
@@ -9,16 +11,17 @@ export const AuthProvider = ({ children }) => {
     });
 
     const [token, setToken] = useState(() => {
-        return localStorage.getItem("lumora_token") || null;
+        return localStorage.getItem("token") || localStorage.getItem("lumora_token") || null;
     });
 
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (token) {
-            fetch("http://localhost:8080/api/auth/me", {
+        const currentToken = token || localStorage.getItem("token") || localStorage.getItem("lumora_token");
+        if (currentToken) {
+            fetch(`${API_URL}/api/auth/me`, {
                 headers: {
-                    "Authorization": `Bearer ${token}`
+                    "Authorization": `Bearer ${currentToken}`
                 }
             })
             .then(async res => {
@@ -45,6 +48,7 @@ export const AuthProvider = ({ children }) => {
         setUser(userData);
         setToken(authToken);
         localStorage.setItem("lumora_user", JSON.stringify(userData));
+        localStorage.setItem("token", authToken);
         localStorage.setItem("lumora_token", authToken);
     };
 
@@ -52,6 +56,7 @@ export const AuthProvider = ({ children }) => {
         setUser(userData);
         setToken(authToken);
         localStorage.setItem("lumora_user", JSON.stringify(userData));
+        localStorage.setItem("token", authToken);
         localStorage.setItem("lumora_token", authToken);
     };
 
@@ -59,6 +64,7 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
         setToken(null);
         localStorage.removeItem("lumora_user");
+        localStorage.removeItem("token");
         localStorage.removeItem("lumora_token");
     };
 
@@ -68,3 +74,4 @@ export const AuthProvider = ({ children }) => {
         </AuthContext.Provider>
     );
 };
+
