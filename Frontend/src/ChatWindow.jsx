@@ -5,7 +5,7 @@ import { AuthContext } from "./AuthContext.jsx";
 import { useContext, useState, useEffect } from "react";
 import { ScaleLoader } from "react-spinners";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+import { API_URL } from "./config.js";
 
 export default function ChatWindow(){
     const {prompt, setPrompt, reply, setReply, currThreadId, setPrevChats, setNewchat} = useContext(MyContext);

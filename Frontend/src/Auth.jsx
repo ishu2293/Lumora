@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 import { AuthContext } from "./AuthContext.jsx";
 import "./Auth.css";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+import { API_URL } from "./config.js";
 
 export default function Auth() {
     const [isLogin, setIsLogin] = useState(true);

@@ -4,7 +4,7 @@ import { MyContext } from "./Mycontext.jsx";
 import { AuthContext } from "./AuthContext.jsx";
 import { v1 as uuidv1 } from "uuid";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+import { API_URL } from "./config.js";
 
 export default function Sidebar(){
     const {allThreads, setAllThreads, currThreadId, setNewchat, setPrompt, setReply, setcurrThreadId, setPrevChats} = useContext(MyContext);
