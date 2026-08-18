@@ -16,6 +16,8 @@ export default function ChatWindow(){
 
     const getReply = async () => {
         if(!prompt.trim()) return;
+        const currentPrompt = prompt;
+        setPrompt("");
         setLoading(true);
         setNewchat(false);
 
@@ -28,7 +30,7 @@ export default function ChatWindow(){
                 "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({
-                message: prompt,
+                message: currentPrompt,
                 threadId: currThreadId
             })
         };
@@ -37,6 +39,15 @@ export default function ChatWindow(){
             const response = await fetch(`${API_URL}/api/chat`, options);
             const res = await response.json();
             if (response.ok) {
+                setPrevChats(prevChats => (
+                    [...prevChats, {
+                        role: "user",
+                        content: currentPrompt
+                    }, {
+                        role: "assistant",
+                        content: res.reply
+                    }]
+                ));
                 setReply(res.reply);
             } else {
                 console.error("Chat error:", res.error);
@@ -46,22 +57,6 @@ export default function ChatWindow(){
         }
         setLoading(false);
     };
-
-    // Append new chat to prevChats
-    useEffect(() => {
-        if(prompt && reply){
-            setPrevChats(prevChats => (
-                [...prevChats, {
-                    role: "user",
-                    content: prompt
-                }, {
-                    role: "assistant",
-                    content: reply
-                }]
-            ));
-        }
-        setPrompt("");
-    }, [reply]);
 
     const handleProfileClick = () => {
         setIsOpen(!isOpen);
