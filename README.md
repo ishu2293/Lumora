@@ -1,7 +1,7 @@
 # Lumora
 
 Lumora is a full-stack AI chatbot built with React, Node.js, Express, MongoDB Atlas, and Groq API. It provides a simple conversational interface with persistent chat history and thread management.<br><br>
-Live Demo: https://lumora-r6nx.vercel.app/
+
 <img width="1585" height="850" alt="image" src="https://github.com/user-attachments/assets/4175b0b6-9a5e-419f-bc45-b4974e3712bd" />
 
 <img width="1432" height="768" alt="image" src="https://github.com/user-attachments/assets/68d76150-bd10-4234-80a4-dae74367a640" />
