@@ -85,7 +85,7 @@ router.post("/chat", authMiddleware, async (req, res) => {
         res.json({ reply: assistantReply });
     } catch (err) {
         console.error("Chat API Error:", err);
-        res.status(500).json({ error: "Something went wrong processing your request." });
+        res.status(500).json({ error: err.message || "Something went wrong processing your request." });
     }
 });
 

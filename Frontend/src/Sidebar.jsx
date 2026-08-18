@@ -3,6 +3,7 @@ import { useContext, useEffect } from "react";
 import { MyContext } from "./Mycontext.jsx";
 import { AuthContext } from "./AuthContext.jsx";
 import { v1 as uuidv1 } from "uuid";
+import lumoraIcon from "./assets/Lumora_icon.png";
 
 import { API_URL } from "./config.js";
 
@@ -80,7 +81,7 @@ export default function Sidebar(){
         <section className="sidebar">
             <button onClick={createNewChat} className="new-chat-btn">
                 <div className="new-chat-content">
-                    <img src="src/assets/lumora_icon.png" alt="Lumora logo" className="logo" />
+                    <img src={lumoraIcon} alt="Lumora logo" className="logo" />
                     <span>New Chat</span>
                 </div>
                 <i className="fa-solid fa-plus add-icon"></i>

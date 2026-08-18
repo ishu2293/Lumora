@@ -14,6 +14,34 @@ app.use(cors({
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
+
+const connectDB = async () => {
+    try {
+        if (mongoose.connection.readyState === 1) {
+            return;
+        }
+        if (!process.env.MONGO_URI) {
+            console.error("MONGO_URI is missing in environment variables!");
+            throw new Error("MONGO_URI environment variable is not defined");
+        }
+        await mongoose.connect(process.env.MONGO_URI);
+        console.log("Connected with Database");
+    } catch (err) {
+        console.error("Failed to connect with Database:", err.message);
+        throw err;
+    }
+};
+
+// Middleware to ensure DB connection before handling API routes
+app.use(async (req, res, next) => {
+    try {
+        await connectDB();
+        next();
+    } catch (err) {
+        return res.status(500).json({ error: "Database connection failed. " + err.message });
+    }
+});
+
 app.use("/api/auth", authroutes);
 app.use("/api", chatroutes);
 
@@ -28,40 +56,11 @@ app.use((err, req, res, next) => {
     res.status(err.status || 500).json({ error: err.message || "Internal Server Error" });
 });
 
-// app.listen(port, () => {
-//     console.log(`Listening on port ${port}`)
-//     connectDB();
-// });
-
-// const connectDB = async() => {
-//     try{
-//         await mongoose.connect(process.env.MONGO_URI);
-//         console.log("Connected with Database");
-//     }catch(err){
-//         console.log("Failed to connect with Database", err);
-//     }
-// }
 if (process.env.NODE_ENV !== "production") {
-
     const port = 8080;
-
     app.listen(port, () => {
         console.log(`Listening on port ${port}`);
     });
-
 }
-const connectDB = async () => {
-    try {
-        if (mongoose.connection.readyState === 1) {
-            return;
-        }
-        await mongoose.connect(process.env.MONGO_URI);
-        console.log("Connected with Database");
-    } catch (err) {
-        console.log("Failed to connect with Database", err);
-    }
-};
-
-connectDB();
 
 export default app;
