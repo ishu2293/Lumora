@@ -8,7 +8,7 @@ const getApiresponse = async (message) => {
             "Authorization": `Bearer ${process.env.GROQ_API_KEY}`
         },
         body: JSON.stringify({
-            "model": process.env.GROQ_MODEL || "llama-3.1-8b-instant",
+            "model": process.env.GROQ_MODEL || "groq/compound",
             "messages": [{
                 "role": "user",
                 "content": message
