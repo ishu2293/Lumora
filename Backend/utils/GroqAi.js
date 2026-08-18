@@ -1,6 +1,12 @@
 import "dotenv/config";
 
 const getApiresponse = async (message) => {
+    // Truncate prompt if it exceeds 80,000 characters to prevent payload limit overflow
+    const maxChars = 80000;
+    const safeMessage = typeof message === "string" && message.length > maxChars 
+        ? message.substring(0, maxChars) + "\n\n[Prompt truncated due to length]"
+        : message;
+
     const options = {
         method: "POST",
         headers: {
@@ -11,7 +17,7 @@ const getApiresponse = async (message) => {
             "model": process.env.GROQ_MODEL || "groq/compound",
             "messages": [{
                 "role": "user",
-                "content": message
+                "content": safeMessage
             }]
         })
     };
